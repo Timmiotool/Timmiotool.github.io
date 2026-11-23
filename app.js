@@ -9,7 +9,7 @@
     els.forEach(function(e){ e.innerHTML=e.getAttribute('data-'+l); });
     [].forEach.call(document.querySelectorAll('.lang button'),function(b){ b.classList.toggle('on',b.dataset.l===l); });
     var t=document.querySelector('.tab.on'); if(t){ showTab(t); }
-    document.title=l==='en'?'Lumen – the Kodi skin':'Lumen – der Skin für Kodi';
+    var pt=document.body.getAttribute('data-title-'+l); document.title=pt||(l==='en'?'Lumen – the Kodi skin':'Lumen – der Skin für Kodi');
     put(l);
   }
   var start=get()||((navigator.language||'de').toLowerCase().indexOf('de')===0?'de':'en');
