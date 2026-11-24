@@ -32,9 +32,15 @@ h1 b{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background
 .btn.s{border-color:rgba(255,177,92,.7);color:#ffe9cf;background:rgba(255,177,92,.08)}
 .meta{color:var(--mute);font-size:14px}
 .shot{border-radius:var(--r);border:1px solid rgba(255,255,255,.16);box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 110px rgba(255,122,48,.16);background:#000}
-.hero .shot{transform:perspective(2200px) rotateY(-9deg) rotateX(2deg)}
+.hero .shot{transform:none}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .chip{border:1px solid rgba(255,177,92,.6);background:rgba(255,177,92,.1);color:#ffe9cf;padding:6px 16px;border-radius:99px;font-size:14px;font-weight:600}
+
+/* Hero-Chips nebeneinander (auf schmalen Bildschirmen duerfen sie umbrechen) */
+.hero .chips{flex-wrap:nowrap;gap:8px}
+.hero .chip{white-space:nowrap;padding:6px 13px;font-size:13.5px}
+@media(max-width:1180px){.hero .chips{flex-wrap:wrap}}
+.herovid{display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:16/9}
 /* sections */
 section{padding:84px 0}
 .sh{max-width:46em;margin-bottom:36px}

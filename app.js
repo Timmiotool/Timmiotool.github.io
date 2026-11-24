@@ -33,5 +33,12 @@
   /* reveal */
   var rv=[].slice.call(document.querySelectorAll('.reveal'));
   if('IntersectionObserver' in window && location.search.indexOf('static')<0){ var io=new IntersectionObserver(function(en){ en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }); },{threshold:.12}); rv.forEach(function(r){ io.observe(r); }); } else { rv.forEach(function(r){ r.classList.add('in'); }); }
+  /* hero video: no autoplay with reduced motion; pause when not visible */
+  var hv=document.querySelector('.herovid');
+  if(hv){
+    var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(rm){ hv.removeAttribute('autoplay'); hv.pause(); }
+    else if('IntersectionObserver' in window){ new IntersectionObserver(function(en){ en.forEach(function(x){ if(x.isIntersecting){ var p=hv.play(); if(p&&p.catch){ p.catch(function(){}); } } else { hv.pause(); } }); },{threshold:.15}).observe(hv); }
+  }
   setLang(start);
 })();
