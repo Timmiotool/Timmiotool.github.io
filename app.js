@@ -40,5 +40,27 @@
     if(rm){ hv.removeAttribute('autoplay'); hv.pause(); }
     else if('IntersectionObserver' in window){ new IntersectionObserver(function(en){ en.forEach(function(x){ if(x.isIntersecting){ var p=hv.play(); if(p&&p.catch){ p.catch(function(){}); } } else { hv.pause(); } }); },{threshold:.15}).observe(hv); }
   }
+  /* download links: follow the versions published in the repo (addons.xml); the links in the HTML stay as a fallback */
+  (function(){
+    var BASE='kodi-repo/', OK=/^[0-9][0-9A-Za-z.\-]*$/;
+    function ver(xml,id){
+      try{ var d=new DOMParser().parseFromString(xml,'text/xml'), a=d.getElementsByTagName('addon');
+        for(var i=0;i<a.length;i++){ if(a[i].getAttribute('id')===id){ var v=a[i].getAttribute('version'); return OK.test(v)?v:null; } } }catch(e){}
+      return null; }
+    function swap(s,id,v){ return s.replace(new RegExp(id.replace(/\./g,'\\.')+'-[0-9][0-9A-Za-z.\\-]*\\.zip','g'),id+'-'+v+'.zip'); }
+    function apply(id,v){
+      [].forEach.call(document.querySelectorAll('a[href*="'+id+'-"]'),function(a){ a.setAttribute('href',swap(a.getAttribute('href'),id,v)); });
+      [].forEach.call(document.querySelectorAll('[data-en]'),function(e){
+        ['data-en','data-de'].forEach(function(n){ var s=e.getAttribute(n); if(s&&s.indexOf(id+'-')>-1){ e.setAttribute(n,swap(s,id,v)); } });
+        [].forEach.call(e.querySelectorAll('a[href*="'+id+'-"]'),function(a){ a.setAttribute('href',swap(a.getAttribute('href'),id,v)); }); }); }
+    function check(id,v,file){
+      return fetch(BASE+id+'/'+file(v),{method:'HEAD',cache:'no-cache'}).then(function(r){ if(r.ok){ apply(id,v); } }).catch(function(){}); }
+    if(!window.fetch||!window.DOMParser||location.protocol==='file:'){ return; }
+    fetch(BASE+'addons.xml',{cache:'no-cache'}).then(function(r){ return r.ok?r.text():''; }).then(function(x){
+      var s=ver(x,'skin.lumen'), r=ver(x,'repository.timmiotool');
+      if(s){ check('skin.lumen',s,function(v){ return 'skin.lumen-'+v+'.zip'; }); }
+      if(r){ check('repository.timmiotool',r,function(v){ return 'repository.timmiotool-'+v+'.zip'; }); }
+    }).catch(function(){});
+  })();
   setLang(start);
 })();
